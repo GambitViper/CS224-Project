@@ -27,16 +27,21 @@ class Game :
         return self.turn%2 + 1
 
     def game_loop(self) :
+        self.print_board()
         won = 0
         while self.turn < 27 and not won:
-            move = map( int, raw_input("Player {} enter move [x] [y] [z] :".format(self.turn)).split(" "))
-            print(move)
+            move = map( int, raw_input("Player {} enter move [x] [y] [z] :".format(self.turn+1)).split(" "))
+            # print(move)
             move = self.make_move(move)
             while(not move) :
                 move = map( int, raw_input("Player {} enter VALID move [x] [y] [z] :".format(self.turn+1)).split(" "))
                 move = self.make_move(move)
             self.print_board()
             won = self.check_win()
+        if won :
+            print("Player {} Wins!!!".format(won))
+        else :
+            print("Draw")
 
     def check_win(self) :
         for grid in self.board :
@@ -59,7 +64,7 @@ class Game :
         if won :
             return won
         line = [grid[2-i][i] for i in range(len(grid))] # I don't think this works
-        print line
+        # print line
         won = self.check_line(line)
         if won :
             return won

@@ -48,7 +48,16 @@ class Game :
             won = self.check_grid(grid)
             if won :
                 return won
-        return 0
+        for i in range(len(self.board)) :
+            # grid = TODO make grids!!
+            grid = []
+            for j in range(len(self.board)) :
+                grid.append([self.board[j][k][i] for k in range(len(self.board))])
+            # print(grid)
+            won = self.check_grid(grid)
+            if won :
+                return won
+        return self.check_mulit_diagonal()
         # TODO add check 3d diagonals
 
     def check_grid(self, grid) :
@@ -63,11 +72,14 @@ class Game :
         won = self.check_line(line)
         if won :
             return won
-        line = [grid[2-i][i] for i in range(len(grid))] # I don't think this works
+        line = [grid[2-i][i] for i in range(len(grid))]
         # print line
         won = self.check_line(line)
         if won :
             return won
+        return 0
+
+    def check_mulit_diagonal(self) :
         return 0
 
     def check_verticle(self, grid) :

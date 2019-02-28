@@ -44,7 +44,7 @@ class Game :
             if won :
                 return won
         return 0
-        # TODO add check extream diagonals
+        # TODO add check 3d diagonals
 
     def check_grid(self, grid) :
         f = [self.check_verticle(grid), self.check_horizontal(grid), self.check_diagonal(grid)]

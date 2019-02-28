@@ -30,11 +30,11 @@ class Game :
         self.print_board()
         won = 0
         while self.turn < 27 and not won:
-            move = map( int, raw_input("Player {} enter move [x] [y] [z] :".format(self.turn+1)).split(" "))
+            move = map( int, raw_input("Player {} enter move [x] [y] [z] :".format(self.turn%2+1)).split(" "))
             # print(move)
             move = self.make_move(move)
             while(not move) :
-                move = map( int, raw_input("Player {} enter VALID move [x] [y] [z] :".format(self.turn+1)).split(" "))
+                move = map( int, raw_input("Player {} enter VALID move [x] [y] [z] :".format(self.turn%2+1)).split(" "))
                 move = self.make_move(move)
             self.print_board()
             won = self.check_win()
@@ -80,6 +80,12 @@ class Game :
         return 0
 
     def check_mulit_diagonal(self) :
+        lines = [[self.board[i][i][i] for i in range(len(self.board))], [self.board[i][i][2-i] for i in range(len(self.board))], [self.board[i][2-i][i] for i in range(len(self.board))], [self.board[i][2-i][2-i] for i in range(len(self.board))]]
+        for line in lines :
+            won = self.check_line(line)
+            if won :
+                return won
+
         return 0
 
     def check_verticle(self, grid) :

@@ -109,7 +109,3 @@ class Game :
             if i != temp :
                 return 0
         return temp
-
-g = Game()
-
-g.game_loop()

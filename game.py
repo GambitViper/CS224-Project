@@ -1,11 +1,13 @@
 class Game :
-    def __init__(self) :
-        self.board = [[[0 for _ in range(3)] for _ in range(3)] for _ in range(3)]
+    def __init__(self, s=3) :
+        self.size = s
+        self.board = [[[0 for _ in range(self.size)] for _ in range(self.size)] for _ in range(self.size)]
         self.turn = 0
+
 # __repr__ TODO look up
     def print_board(self) :
         print("Turn {}\n##########".format(self.turn))
-        if len(self.board) != 3 :
+        if len(self.board) != self.size :
             print("Empty board - Please init_board")
         else :
             for level in self.board :
@@ -38,69 +40,83 @@ class Game :
                 move = self.make_move(move)
             self.print_board()
             won = self.check_win()
-        if won :
+        if won and type(won) == list :
+            print("Player {} Wins at {}!!!".format(won[0],won[1]))
+        elif won :
+            print(type(won))
             print("Player {} Wins!!!".format(won))
         else :
             print("Draw")
 
     def check_win(self) :
-        for grid in self.board :
+        for i, grid in enumerate(self.board) :
             won = self.check_grid(grid)
             if won :
+                won = list(won)
+                for cord in won[1] :
+                    cord.insert(0,i)
                 return won
-        for i in range(len(self.board)) :
-            # grid = TODO make grids!!
+        for i in range(self.size) :
             grid = []
-            for j in range(len(self.board)) :
-                grid.append([self.board[j][k][i] for k in range(len(self.board))])
+            for j in range(self.size) :
+                grid.append([self.board[j][k][i] for k in range(self.size)])
             # print(grid)
             won = self.check_grid(grid)
             if won :
+                won = list(won)
+                for cord in won[1] :
+                    cord.append(i)
                 return won
         return self.check_mulit_diagonal()
         # TODO add check 3d diagonals
 
     def check_grid(self, grid) :
-        f = [self.check_verticle(grid), self.check_horizontal(grid), self.check_diagonal(grid)]
-        for i in f :
+        checks = [self.check_verticle(grid), self.check_horizontal(grid), self.check_diagonal(grid)]
+        for i in checks :
             if i :
                 return i
         return 0
 
     def check_diagonal(self, grid) :
-        line = [grid[i][i] for i in range(len(grid))]
+        line = [grid[i][i] for i in range(self.size)]
         won = self.check_line(line)
         if won :
-            return won
-        line = [grid[2-i][i] for i in range(len(grid))]
+            return won, [[i,i] for i in range(self.size)]
+        line = [grid[(self.size-1)-i][i] for i in range(self.size)]
         # print line
         won = self.check_line(line)
         if won :
-            return won
+            return won, [[self.size-1-i, i] for i in range(self.size)]
         return 0
 
     def check_mulit_diagonal(self) :
-        lines = [[self.board[i][i][i] for i in range(len(self.board))], [self.board[i][i][2-i] for i in range(len(self.board))], [self.board[i][2-i][i] for i in range(len(self.board))], [self.board[i][2-i][2-i] for i in range(len(self.board))]]
-        for line in lines :
+        lines = [[self.board[i][i][i] for i in range(self.size)],
+                 [self.board[i][i][(self.size-1)-i] for i in range(self.size)],
+                 [self.board[i][(self.size-1)-i][i] for i in range(self.size)],
+                 [self.board[i][(self.size-1)-i][(self.size-1)-i] for i in range(self.size)]]
+        cords = [[[i, i, i] for i in range(self.size)],
+                [[i, i, (self.size-1)-i] for i in range(self.size)],
+                [[i, (self.size-1)-i, i] for i in range(self.size)],
+                [[i, (self.size-1)-i, (self.size-1)-i] for i in range(self.size)]]
+        for i, line in enumerate(lines) :
             won = self.check_line(line)
             if won :
-                return won
-
+                return [won, cords[i]]
         return 0
 
     def check_verticle(self, grid) :
-        for i in range(len(grid[0])) :
+        for i in range(self.size) :
             line = [grid[j][i] for j in range(len(grid))] #double check
             won = self.check_line(line)
             if won :
-                return won
+                return won, [[j,i] for j in range(self.size)]
         return 0;
 
     def check_horizontal(self, grid) :
-        for row in grid :
-            won = self.check_line(row)
+        for i in range(self.size) :
+            won = self.check_line(grid[i])
             if won :
-                return won
+                return won, [[i,j] for j in range(self.size) ]
         return 0
 
     def check_line(self, line) :
@@ -109,3 +125,7 @@ class Game :
             if i != temp :
                 return 0
         return temp
+
+## TODO if Zach comment out before using
+g = Game()
+g.game_loop()

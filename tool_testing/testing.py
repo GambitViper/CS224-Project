@@ -20,7 +20,7 @@ gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Testing pygame')
 clock = pygame.time.Clock()
 
-carImg = pygame.image.load('8_bit_racer.png')
+carImg = pygame.image.load('../images/8_bit_racer.png')
 
 
 def things_dodged(count):

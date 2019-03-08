@@ -19,7 +19,7 @@ gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('3D-Tic-Tac-Toe.2')
 clock = pygame.time.Clock()
 
-boardImg = pygame.image.load('gameboard.png')
+boardImg = pygame.image.load('./images/gameboard.png')
 board_width = 306
 board_height = 478
 

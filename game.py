@@ -4,17 +4,18 @@ class Game :
         self.board = [[[0 for _ in range(self.size)] for _ in range(self.size)] for _ in range(self.size)]
         self.turn = 0
 
-# __repr__ TODO look up
-    def print_board(self) :
-        print("Turn {}\n##########".format(self.turn))
+    def __repr__(self) :
+        boardbuf = ""
+        boardbuf += "Turn {}\n##########\n".format(self.turn)
         if len(self.board) != self.size :
-            print("Empty board - Please init_board")
+            boardbuf += "Empty board - Please init_board\n"
         else :
             for level in self.board :
                 for row in level :
-                    print(row)
-                print("##########")
-        print("")
+                    boardbuf += str(row) + "\n"
+                boardbuf += "##########\n"
+        boardbuf += "\n"
+        return boardbuf
 
     def make_move(self, m) :
         x, y, z = m[0], m[1], m[2]
@@ -27,26 +28,6 @@ class Game :
 
     def get_player_turn(self) :
         return self.turn%2 + 1
-
-    def game_loop(self) :
-        self.print_board()
-        won = 0
-        while self.turn < 27 and not won:
-            move = map( int, raw_input("Player {} enter move [x] [y] [z] :".format(self.turn%2+1)).split(" "))
-            # print(move)
-            move = self.make_move(move)
-            while(not move) :
-                move = map( int, raw_input("Player {} enter VALID move [x] [y] [z] :".format(self.turn%2+1)).split(" "))
-                move = self.make_move(move)
-            self.print_board()
-            won = self.check_win()
-        if won and type(won) == list :
-            print("Player {} Wins at {}!!!".format(won[0],won[1]))
-        elif won :
-            print(type(won))
-            print("Player {} Wins!!!".format(won))
-        else :
-            print("Draw")
 
     def check_win(self) :
         for i, grid in enumerate(self.board) :
@@ -68,7 +49,7 @@ class Game :
                     cord.append(i)
                 return won
         return self.check_mulit_diagonal()
-        # TODO add check 3d diagonals
+        # TODO add check 3d horizontals
 
     def check_grid(self, grid) :
         checks = [self.check_verticle(grid), self.check_horizontal(grid), self.check_diagonal(grid)]
@@ -110,7 +91,7 @@ class Game :
             won = self.check_line(line)
             if won :
                 return won, [[j,i] for j in range(self.size)]
-        return 0;
+        return 0
 
     def check_horizontal(self, grid) :
         for i in range(self.size) :
@@ -126,6 +107,3 @@ class Game :
                 return 0
         return temp
 
-## TODO if Zach comment out before using
-g = Game()
-g.game_loop()

@@ -37,6 +37,23 @@ boxes = {
   ((103,415),(179,460)) : (2,2,0), ((183,415),(267,460)) : (2,2,1), ((271,415),(361,460)) : (2,2,2)
 }
 
+def turn_converter(turn, parent_pos):
+    pos1 = parent_pos[0] + 60
+    pos2 = parent_pos[1] - 12
+    pos = (pos1,pos2)
+    pygame.draw.rect(gameDisplay, black, [pos1, pos2, 50, 50], 2)
+    pos = (pos[0] + 25, pos[1] + 25)
+    if turn == 1:
+        draw_x(pos,15)
+    if turn == 2:
+        pygame.draw.circle(gameDisplay, blue, pos, 15, 2)
+
+def turn_counter(turn, pos):
+    font = pygame.font.SysFont(None, 35)
+    text = font.render("Turn  ", True, black)
+    turn_display = turn_converter(turn, pos)
+    gameDisplay.blit(text,pos)
+
 def get_move_place(pos):
   x, y = pos[0], pos[1]
   for box in boxes:
@@ -94,6 +111,7 @@ def game_loop():
         for placex in playerx:
             draw_x(placex, 15)
 
+        turn_counter(g2d.get_player_turn(), (display_width - 125,25))
         pygame.display.update()
         clock.tick(60)
 

@@ -1,4 +1,5 @@
 import copy
+from random import *
 class Game:
     def __init__(self, s=3):
         self.size = s
@@ -108,7 +109,23 @@ class Game:
                 return 0
         return temp
 
+    # function for dumb bot to take it's turn, returns a list of the three indexes that are the location it will put
+    # its piece. Code assumes bot is always O (2 in the game board)
     def dumb_bot_take_turn(self):
-        free_spaces = [[l, r, c] for l in range(len(self.board)) for r in range(len(self.board[l])) for c in range(len(self.board[l][r])) if self.board[l][r][c] == 0]
-
-        return
+        # get list of all empty spaces
+        free_spaces = [[l, r, c] for l in range(len(self.board)) for r in range(len(self.board[l])) for c in range(
+            len(self.board[l][r])) if self.board[l][r][c] == 0]
+        # for each space in free_spaces check if a move results in a win for bot, if it does make that move.
+        for m in free_spaces:
+            fake_board = copy.deepcopy(self)
+            fake_board.board[m[0]][m[1]][m[2]] = 2
+            if fake_board.check_win():
+                return m
+        # for each space in free_spaces check if a move results in a win for player, if it does block that move
+        for m in free_spaces:
+            fake_board = copy.deepcopy(self)
+            fake_board.board[m[0]][m[1]][m[2]] = 1
+            if fake_board.check_win():
+                return m
+        # there is no wining move for the bot or player, so take a random move from free_spaces
+        return free_spaces[randint(0, len(free_spaces)-1)]

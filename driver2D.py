@@ -9,13 +9,13 @@ pygame.init()
 display_width = 600
 display_height = 500
 
-black = (0,0,0)
-white = (255,255,255)
-red = (255,0,0)
-green = (0,255,0)
-blue = (0,0,255)
+black = (0, 0, 0)
+white = (255, 255, 255)
+red = (255, 0, 0)
+green = (0, 255, 0)
+blue = (0, 0, 255)
 
-gameDisplay = pygame.display.set_mode((display_width,display_height))
+gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('3D-Tic-Tac-Toe.2')
 clock = pygame.time.Clock()
 
@@ -24,43 +24,47 @@ board_width = 306
 board_height = 478
 
 boxes = {
-  ((133,15),(185,60))   : (0,0,0), ((191,15),(257,60))   : (0,0,1), ((263,15),(331,60))   : (0,0,2),
-  ((119,60),(183,106))  : (0,1,0), ((187,60),(263,106))  : (0,1,1), ((267,60),(347,106))  : (0,1,2),
-  ((103,106),(178,150)) : (0,2,0), ((183,106),(268,150)) : (0,2,1), ((271,106),(361,150)) : (0,2,2),
+    ((133, 15), (185, 60)): (0, 0, 0), ((191, 15), (257, 60)): (0, 0, 1), ((263, 15), (331, 60)): (0, 0, 2),
+    ((119, 60), (183, 106)): (0, 1, 0), ((187, 60), (263, 106)): (0, 1, 1), ((267, 60), (347, 106)): (0, 1, 2),
+    ((103, 106), (178, 150)): (0, 2, 0), ((183, 106), (268, 150)): (0, 2, 1), ((271, 106), (361, 150)): (0, 2, 2),
 
-  ((133,168),(187,213)) : (1,0,0), ((191,168),(257,213)) : (1,0,1), ((263,168),(331,213)) : (1,0,2),
-  ((119,213),(183,260)) : (1,1,0), ((187,213),(263,260)) : (1,1,1), ((267,213),(347,260)) : (1,1,2),
-  ((103,260),(179,305)) : (1,2,0), ((183,260),(267,305)) : (1,2,1), ((271,260),(361,305)) : (1,2,2),
-  
-  ((133,325),(187,368)) : (2,0,0), ((191,325),(257,368)) : (2,0,1), ((263,325),(331,368)) : (2,0,2),
-  ((119,368),(183,415)) : (2,1,0), ((187,368),(263,415)) : (2,1,1), ((267,368),(347,415)) : (2,1,2),
-  ((103,415),(179,460)) : (2,2,0), ((183,415),(267,460)) : (2,2,1), ((271,415),(361,460)) : (2,2,2)
+    ((133, 168), (187, 213)): (1, 0, 0), ((191, 168), (257, 213)): (1, 0, 1), ((263, 168), (331, 213)): (1, 0, 2),
+    ((119, 213), (183, 260)): (1, 1, 0), ((187, 213), (263, 260)): (1, 1, 1), ((267, 213), (347, 260)): (1, 1, 2),
+    ((103, 260), (179, 305)): (1, 2, 0), ((183, 260), (267, 305)): (1, 2, 1), ((271, 260), (361, 305)): (1, 2, 2),
+
+    ((133, 325), (187, 368)): (2, 0, 0), ((191, 325), (257, 368)): (2, 0, 1), ((263, 325), (331, 368)): (2, 0, 2),
+    ((119, 368), (183, 415)): (2, 1, 0), ((187, 368), (263, 415)): (2, 1, 1), ((267, 368), (347, 415)): (2, 1, 2),
+    ((103, 415), (179, 460)): (2, 2, 0), ((183, 415), (267, 460)): (2, 2, 1), ((271, 415), (361, 460)): (2, 2, 2)
 }
+
 
 def turn_converter(turn, parent_pos):
     pos1 = parent_pos[0] + 60
     pos2 = parent_pos[1] - 12
-    pos = (pos1,pos2)
+    pos = (pos1, pos2)
     pygame.draw.rect(gameDisplay, black, [pos1, pos2, 50, 50], 2)
     pos = (pos[0] + 25, pos[1] + 25)
     if turn == 1:
-        draw_x(pos,15)
+        draw_x(pos, 15)
     if turn == 2:
         pygame.draw.circle(gameDisplay, blue, pos, 15, 2)
+
 
 def turn_counter(turn, pos):
     font = pygame.font.SysFont(None, 35)
     text = font.render("Turn  ", True, black)
     turn_display = turn_converter(turn, pos)
-    gameDisplay.blit(text,pos)
+    gameDisplay.blit(text, pos)
+
 
 def get_move_place(pos):
-  x, y = pos[0], pos[1]
-  for box in boxes:
-    a, b = box[0][0], box[0][1]
-    c, d = box[1][0], box[1][1]
-    if x > a and x < c and y > b and y < d:
-       return boxes.get(box)
+    x, y = pos[0], pos[1]
+    for box in boxes:
+        a, b = box[0][0], box[0][1]
+        c, d = box[1][0], box[1][1]
+        if x > a and x < c and y > b and y < d:
+            return boxes.get(box)
+
 
 def draw_x(pos, radius):
     line1_x1 = pos[0] - radius
@@ -73,8 +77,9 @@ def draw_x(pos, radius):
     line2_x2 = pos[0] + radius
     line2_y2 = pos[1] + radius
 
-    pygame.draw.line(gameDisplay, red, (line1_x1,line1_y1), (line1_x2,line1_y2), 2)
-    pygame.draw.line(gameDisplay, red, (line2_x1,line2_y1), (line2_x2, line2_y2), 2)
+    pygame.draw.line(gameDisplay, red, (line1_x1, line1_y1), (line1_x2, line1_y2), 2)
+    pygame.draw.line(gameDisplay, red, (line2_x1, line2_y1), (line2_x2, line2_y2), 2)
+
 
 def game_loop():
     g2d = Game()
@@ -102,8 +107,8 @@ def game_loop():
                         elif g2d.get_player_turn() == 2:
                             playerx.append(click_pos)
 
-        gameDisplay.fill((255,255,255))
-        gameDisplay.blit(boardImg,((display_width - board_width)/4,0))
+        gameDisplay.fill((255, 255, 255))
+        gameDisplay.blit(boardImg, ((display_width - board_width) / 4, 0))
 
         for placeo in playero:
             pygame.draw.circle(gameDisplay, blue, placeo, 15, 2)
@@ -111,15 +116,16 @@ def game_loop():
         for placex in playerx:
             draw_x(placex, 15)
 
-        turn_counter(g2d.get_player_turn(), (display_width - 125,25))
+        turn_counter(g2d.get_player_turn(), (display_width - 125, 25))
         pygame.display.update()
         clock.tick(60)
 
         won = g2d.check_win()
 
-    if won :
-        print("Player {} Wins!!!".format(won))        
-    else :
+    if won:
+        print("Player {} Wins!!!".format(won))
+    else:
         print("Draw")
+
 
 game_loop()

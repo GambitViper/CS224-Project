@@ -21,14 +21,16 @@ def game_loop(game, cpu = False) :
     if won and type(won) == list :
         print("Player {} Wins at {}!!!".format(won[0],won[1]))
     elif won :
+        # this probably should not happen
         print(type(won))
         print("Player {} Wins!!!".format(won))
     else :
         print("Draw")
 
 def main():
-    g = Game()
+    g = Game(4)
     game_loop(g, True)
+    # game_loop(g)
 
 if __name__ == "__main__":
     main()

@@ -1,18 +1,18 @@
 from game import Game
 from bot import Bot
 
-def game_loop(game) :
+def game_loop(game, cpu = False) :
     bot = Bot(game)
     print(game) #.print_board()
     won = 0
     while game.turn < 27 and not won:
-        if game.get_player_turn() == 1:
+        if game.get_player_turn() == 1 or not cpu:
             move = map( int, raw_input("Player {} enter move [x] [y] [z] :".format(game.turn%2+1)).split(" "))
             move = game.make_move(move)
             while(not move) :
                 move = map( int, raw_input("Player {} enter VALID move [x] [y] [z] :".format(game.turn%2+1)).split(" "))
                 move = game.make_move(move)
-        elif game.get_player_turn() == 2:
+        elif game.get_player_turn() == 2 and cpu:
             print "...bot taking turn"
             move = bot.dumb_bot_take_turn()
             move = game.make_move(move)
@@ -28,7 +28,7 @@ def game_loop(game) :
 
 def main():
     g = Game()
-    game_loop(g)
+    game_loop(g, True)
 
 if __name__ == "__main__":
     main()

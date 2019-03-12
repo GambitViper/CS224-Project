@@ -44,23 +44,33 @@ boxes = {
     ((103, 415), (179, 460)): (2, 2, 0), ((183, 415), (267, 460)): (2, 2, 1), ((271, 415), (361, 460)): (2, 2, 2)
 }
 
+# Hackey fix to a slight problem with the turn counting display
+# TODO remove later
+def flipTurn(turn):
+    if turn == 1:
+        return 2
+    else:
+        return 1
+
 # Draws the box and displays current symbol for turn
-def turn_converter(turn, parent_pos):
+def turn_converter(turn, parent_pos, cpu):
     pos1 = parent_pos[0] + 60
     pos2 = parent_pos[1] - 12
     pos = (pos1, pos2)
     pygame.draw.rect(gameDisplay, black, [pos1, pos2, 50, 50], 2)
     pos = (pos[0] + 25, pos[1] + 25)
+    if cpu:
+        turn = flipTurn(turn)
     if turn == 1:
         draw_x(pos, 15)
     if turn == 2:
         pygame.draw.circle(gameDisplay, blue, pos, 15, 2)
 
 # Displays the turn for each player in the upper right corner
-def turn_counter(turn, pos):
+def turn_counter(turn, pos, cpu):
     font = pygame.font.SysFont(None, 35)
     text = font.render("Turn  ", True, black)
-    turn_display = turn_converter(turn, pos)
+    turn_display = turn_converter(turn, pos, cpu)
     gameDisplay.blit(text, pos)
 
 # Compares against the bounding boxes array to return the value lookup as a position in the game array
@@ -111,7 +121,7 @@ def drawXs(positions):
         draw_x(pos, 15)
 
 # Game loop performs all the game logic and redrawing of the board during every clock tick
-def game_loop(game, cpu):
+def game_loop(game, cpu = False):
     # Setup board variables for position array of 'O's and position array of 'X's to display symbols on the board
     g2d = game
     if cpu:
@@ -169,7 +179,7 @@ def game_loop(game, cpu):
         drawXs(playerx)
 
         # Calls the function to display the turn counter and the current turn
-        turn_counter(g2d.get_player_turn(), (display_width - 125, 25))
+        turn_counter(g2d.get_player_turn(), (display_width - 125, 25), cpu)
         
         # Updates the window display based on the pre-loaded rendering above and updates the clock tick
         pygame.display.update()

@@ -1,3 +1,4 @@
+import sys
 from game import Game
 from bot import Bot
 
@@ -28,9 +29,15 @@ def game_loop(game, cpu = False) :
         print("Draw")
 
 def main():
-    g = Game(4)
-    game_loop(g, True)
-    # game_loop(g)
+    cpu = False
+    size = 3
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'cpu':
+            cpu = True
+        if len(sys.argv) > 2:
+            size = int(sys.argv[2])
+    g = Game(size)
+    game_loop(g, cpu)
 
 if __name__ == "__main__":
     main()

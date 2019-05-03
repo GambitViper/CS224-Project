@@ -178,6 +178,8 @@ def addRandomShape():
 
 def game_intro():
     # print("game intro")
+    pygame.mixer.music.load('backtrack.mp3')
+    pygame.mixer.music.play()
     randomX = []
     randomO = []
 

@@ -15,9 +15,12 @@ display_height = 500
 # Setup for pre-defined colors
 black = (0, 0, 0)
 white = (255, 255, 255)
-red = (255, 0, 0)
-green = (0, 255, 0)
+red_h = (255, 71, 48)
+red = (232, 32, 52)
+green_h = (67, 255, 64)
+green = (114,232,46)
 blue = (0, 0, 255)
+colors = [black, red_h, red, green_h, green, blue]
 
 # Window setup code
 gameDisplay = pygame.display.set_mode((display_width, display_height))
@@ -26,6 +29,9 @@ clock = pygame.time.Clock()
 
 # Image load and image dimensions
 boardImg = pygame.image.load('./images/gameboard.png')
+pygame.mixer.init()
+# clickSound = pygame.mixer.music.load('click.mp3')
+#                     pygame.mixer.music.play()
 board_width = 306
 board_height = 478
 
@@ -43,6 +49,25 @@ boxes = {
     ((119, 368), (183, 415)): (2, 1, 0), ((187, 368), (263, 415)): (2, 1, 1), ((267, 368), (347, 415)): (2, 1, 2),
     ((103, 415), (179, 460)): (2, 2, 0), ((183, 415), (267, 460)): (2, 2, 1), ((271, 415), (361, 460)): (2, 2, 2)
 }
+
+board_lines = [
+    ((135,15), (318,15)), ((120,60),(332,60)), ((103,107),(347,107)), ((88,152),(363,152)), 
+    ((135,170),(318,170)), ((120,215),(332,215)), ((103,260),(347,260)), ((88,305),(363,305)),
+    ((135,324),(318,324)), ((120,370),(332,370)), ((103,416),(347,416)), ((88,461),(363,461)),
+
+    ((135,15),(88,152)), ((318,15),(363,152)), 
+    ((135,170),(88,305)), ((318,170),(363,305)),
+    ((135,324),(88,461)),((318,324),(363,461)),
+
+    ((191,15),(178,152)),((259,15),(271,152)),
+    ((191,170),(178,305)),((259,170),(271,305)),
+    ((191,324),(178,461)),((259,324),(271,461))
+]
+
+def draw_board():
+    for line in board_lines:
+        pygame.draw.line(gameDisplay, black, (line[0][0], line[0][1]), (line[1][0], line[1][1]), 2)
+
 
 # Hackey fix to a slight problem with the turn counting display
 # TODO remove later
@@ -120,10 +145,75 @@ def drawXs(positions):
     for pos in positions:
         draw_x(pos, 15)
 
+def button(msg,x,y,w,h,ic,ac,action=None, game=None):
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    # print(click)
+    if x+w > mouse[0] > x and y+h > mouse[1] > y:
+        pygame.draw.rect(gameDisplay, ac,(x,y,w,h))
+
+        if click[0] == 1 and action != None:
+            if action == "vsplayer":
+                game_loop(False)
+            elif action == "vscpu":
+                game_loop(True)
+    else:
+        pygame.draw.rect(gameDisplay, ic,(x,y,w,h))
+
+    smallText = pygame.font.SysFont("freesansbold.ttf",20)
+    textSurf, textRect = text_objects(msg, smallText)
+    textRect.center = ( (x+(w/2)), (y+(h/2)) )
+    gameDisplay.blit(textSurf, textRect)
+
+def quitgame():
+    pygame.quit()
+    quit()
+
+def text_objects(text, font):
+    textSurface = font.render(text, True, black)
+    return textSurface, textSurface.get_rect()
+
+def addRandomShape():
+    return (random.randint(0,display_width), random.randint(0,display_height))
+
+def game_intro():
+    # print("game intro")
+    randomX = []
+    randomO = []
+
+    while True:
+        for event in pygame.event.get():
+            #print(event)
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+                
+        gameDisplay.fill(white)
+        if len(randomX) < 20:
+            randomX.append(addRandomShape())
+        else:
+            randomX.pop(random.randrange(len(randomX)))
+        if len(randomO) < 20:
+            randomO.append(addRandomShape())
+        else:
+            randomO.pop(random.randrange(len(randomO)))
+        drawXs(randomX)
+        drawOs(randomO)
+        largeText = pygame.font.SysFont("freesansbold.ttf",115)
+        TextSurf, TextRect = text_objects("3D Tic Tac Toe", largeText)
+        TextRect.center = ((display_width/2),(display_height/4))
+        gameDisplay.blit(TextSurf, TextRect)
+
+        button("vs Player",display_width/4,450,100,50, green, green_h, "vsplayer") #,game_loop(game, False))
+        button("vs CPU",display_width/2,450,100,50,red,red_h, "vscpu") #,game_loop(game, True))
+
+        pygame.display.update()
+        clock.tick(15)
+
 # Game loop performs all the game logic and redrawing of the board during every clock tick
-def game_loop(game, cpu = False):
+def game_loop(cpu = False):
     # Setup board variables for position array of 'O's and position array of 'X's to display symbols on the board
-    g2d = game
+    g2d = Game()
     if cpu:
         bot = Bot(g2d)
 
@@ -146,10 +236,12 @@ def game_loop(game, cpu = False):
                 print("Bot turn")
                 move = bot.dumb_bot_take_turn()
                 move_pos = get_bot_move_pos(move)
-                move = game.make_move(move)
+                move = g2d.make_move(move)
                 playerx.append(move_pos)
             elif cpu and g2d.get_player_turn() == 1:
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    pygame.mixer.music.load('click.mp3')
+                    pygame.mixer.music.play()
                     click_pos = pygame.mouse.get_pos()
                     move = get_move_place(click_pos)
                     print("pos: {0} -> move: {1}".format(click_pos, move))
@@ -158,6 +250,8 @@ def game_loop(game, cpu = False):
                             playero.append(click_pos)
             else:
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    pygame.mixer.music.load('click.mp3')
+                    pygame.mixer.music.play()
                     click_pos = pygame.mouse.get_pos()
                     move = get_move_place(click_pos)
                     print("pos: {0} -> move: {1}".format(click_pos, move))
@@ -172,7 +266,8 @@ def game_loop(game, cpu = False):
         gameDisplay.fill((255, 255, 255))
 
         # Displays currently the board represented as a background image
-        gameDisplay.blit(boardImg, ((display_width - board_width) / 4, 0))
+        # gameDisplay.blit(boardImg, ((display_width - board_width) / 4, 0))
+        draw_board()
 
         # Calls the draw functions for each the 'O's and the 'X's
         drawOs(playero)
@@ -194,8 +289,7 @@ def game_loop(game, cpu = False):
         print("Draw")
 
 def main():
-    game = Game()
-    game_loop(game, True)
+    game_intro()
 
 if __name__ == "__main__":
     main()

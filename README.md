@@ -13,8 +13,8 @@ Use `python -m pip install <dependency>`
 # Usage #
 * Use `python driver2D.py` to play the game with 2d graphics
 * Use `python drivercli.py <cpu> <size>` to play the game in the command line
-     * <cpu>  : (optional) set equal to 'cpu' if you want to play against a CPU player : default is aginst human player
-     * <size> : (optional) size to make the game board : default is 3
+     * cpu  : (optional) set equal to 'cpu' if you want to play against a CPU player : default is aginst human player
+     * size : (optional) size to make the game board : default is 3
 
 # Content #
 * __Documents__

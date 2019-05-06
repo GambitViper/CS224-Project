@@ -176,6 +176,21 @@ def text_objects(text, font):
 def addRandomShape():
     return (random.randint(0,display_width), random.randint(0,display_height))
 
+def display_winner(winning_info):
+    x = display_width - 125
+    y = 50
+    w = 50
+    h = 50
+    msg = str(winning_info)
+    bx1, by1 = get_bot_move_pos(winning_info[1][0])
+    bx2, by2 = get_bot_move_pos(winning_info[1][2])
+    pygame.draw.line(gameDisplay, black, (bx1, by1), (bx2, by2), 3)
+    smallText = pygame.font.SysFont("freesansbold.ttf",20)
+    textSurf, textRect = text_objects(msg, smallText)
+    textRect.center = ( (x+(w/2)), (y+(h/2)) )
+    gameDisplay.blit(textSurf, textRect)
+    pygame.display.update()
+
 def game_intro():
     # print("game intro")
     pygame.mixer.music.load('backtrack.mp3')
@@ -265,7 +280,7 @@ def game_loop(cpu = False):
                                 playerx.append(click_pos)
 
         # Wipes the game board and fills white
-        gameDisplay.fill((255, 255, 255))
+        gameDisplay.fill((252, 234, 218))
 
         # Displays currently the board represented as a background image
         # gameDisplay.blit(boardImg, ((display_width - board_width) / 4, 0))
@@ -289,6 +304,9 @@ def game_loop(cpu = False):
         print("Player {} Wins!!!".format(won))
     else:
         print("Draw")
+    display_winner(won)
+    time.sleep(5)
+    
 
 def main():
     game_intro()

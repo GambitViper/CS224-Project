@@ -21,13 +21,12 @@ Use `python -m pip install <dependency>`
      * CS224 Presentation.pdf - ppt slides
      * CS224 Semester Project.docx - word doc write up
 * __images__
-     * 8_bit_racer.png - img for testing.py
-     * gamebboard.png - img for 3d tic tac toe graphics
+     * ~~gamebboard.png~~ - img for 3d tic tac toe graphics deprecated now we have the graphics drawn by the rendering tools
 * __tool_testing__
      * code testing libraries
      * testing.py - little doging game in pygame - req pygame - [tutorial](https://www.youtube.com/watch?v=ujOTNg17LjI&list=PLQVvvaa0QuDdLkP8MrOXLe_rKuf6r80KO)
 * ~~3dtesting.py~~ - TODO delete ?
-* ~~board.py~~ - very basic simulation of 3d tik tac toe - no win checking - obsolete
+* ~~board.py~~ - very basic simulation of 3d tic tac toe - no win checking - obsolete
 * __bot.py__ - contains code for bot(s)
 * __driver2D.py__ - 3d tic tac toe with 2d Graphics
 * __drivercli.py__ - 3d tic tac toe in the command line
